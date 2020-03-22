@@ -1,0 +1,36 @@
+{
+  "name": "musik",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev:server": "nodemon ./bin/www",
+    "build": "rollup -c",
+    "dev:client": "rollup -c -w",
+    "start": "sirv public",
+    "dev": "concurrently --kill-others \"npm run dev:client\" \"npm run dev:server\""
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "chart.js": "^2.9.3",
+    "concurrently": "^5.1.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.2",
+    "sirv-cli": "^0.4.4",
+    "twilio": "^3.41.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^11.0.0",
+    "@rollup/plugin-node-resolve": "^7.0.0",
+    "nodemon": "^2.0.2",
+    "rollup": "^1.20.0",
+    "rollup-plugin-livereload": "^1.0.0",
+    "rollup-plugin-svelte": "^5.0.3",
+    "rollup-plugin-terser": "^5.1.2",
+    "svelte": "^3.0.0"
+  }
+}
