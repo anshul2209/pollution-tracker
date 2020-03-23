@@ -3,11 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev:server": "nodemon src/server",
-    "build": "rollup -c",
-    "dev:client": "rollup -c -w",
+    "client":"rollup -c -w",
     "start": "sirv public",
-    "dev": "concurrently --kill-others \"npm run dev:client\" \"npm run dev:server\""
+    "client:build": "rollup -c",
+    "server": "nodemon src/server",
+
+    "build": "concurrently --kill-others \"npm run client:build\" \"npm run server\" ",
+    "dev": "concurrently --kill-others \"npm run client\" \"npm run server\""
   },
   "dependencies": {
     "axios": "^0.19.2",
