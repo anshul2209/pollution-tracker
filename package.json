@@ -6,7 +6,7 @@
     "client":"rollup -c -w",
     "start": "sirv public",
     "client:build": "rollup -c",
-    "server": "node src/server",
+    "server": "nodemon src/server",
 
     "build": "npm run server",
     "dev": "concurrently --kill-others \"npm run client\" \"npm run server\""
