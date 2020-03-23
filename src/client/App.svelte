@@ -3,6 +3,8 @@
 	import Pollution from './Pollution.svelte';
 	import AqiChart from './AqiChart.svelte';
 	import Chart from 'Chart.js';
+
+	const ApiUrl = 'http://localhost:3000';
 	let title = '';
 	let queryparams = {
 		city: '',
@@ -35,7 +37,7 @@
 
 	let records = [];
 	const handleClick = () => {
-		axios.get('/api/pollution', { params: queryparams })
+		axios.get(`${ApiUrl}/api/pollution`, { params: queryparams })
 		.then(res => {
 			const result = res.data;
 			title = result.title;
