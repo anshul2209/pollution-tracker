@@ -6,9 +6,9 @@
     "client":"rollup -c -w",
     "start": "sirv public",
     "client:build": "rollup -c",
-    "server": "nodemon src/server",
+    "server": "node src/server",
 
-    "build": "concurrently --kill-others \"npm run client:build\" \"npm run server\" ",
+    "build": "npm run server",
     "dev": "concurrently --kill-others \"npm run client\" \"npm run server\""
   },
   "dependencies": {
