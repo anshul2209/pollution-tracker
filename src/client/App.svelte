@@ -4,7 +4,7 @@
 	import AqiChart from './AqiChart.svelte';
 	import Chart from 'Chart.js';
 
-	const ApiUrl = 'http://localhost:3000';
+	const ApiUrl = __buildEnv__ === 'production' ? '' : 'http://localhost:3000';
 	let title = '';
 	let queryparams = {
 		city: '',
