@@ -47,7 +47,7 @@ export default {
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
 		production && terser(),
-		replace({ __buildEnv__: production ? 'production' : 'development' })
+		replace({ __buildEnv__: process.env.NODE_ENV === 'production' ? 'production' : 'development' })
 	],
 	watch: {
 		clearScreen: false

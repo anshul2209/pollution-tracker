@@ -8,6 +8,7 @@
     "client:build": "rollup -c",
     "server": "nodemon src/server",
     "start": "npm run server",
+    "heroku-postbuild": "npm run client:build",
     "dev": "concurrently --kill-others \"npm run client\" \"npm run server\""
   },
   "dependencies": {
