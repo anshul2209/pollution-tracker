@@ -2,11 +2,10 @@
 	import axios from "axios";
 	import Pollution from './Pollution.svelte';
 	import AqiChart from './AqiChart.svelte';
-	import Chart from 'Chart.js';
 
 	const ApiUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
 	console.log('Api Url is', ApiUrl);
-	
+
 	let title = '';
 	let queryparams = {
 		city: '',
