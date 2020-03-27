@@ -16,6 +16,7 @@ export default {
 		file: 'public/js/bundle.js'
 	},
 	plugins: [
+		replace({  'process.env.NODE_ENV' : JSON.stringify(production && 'production' || 'development') }),
 		svelte({
 			// enable run-time checks when not in production
 			dev: !production,
@@ -47,8 +48,7 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser(),
-		replace({ __buildEnv__: process.env.NODE_ENV === 'production' ? 'production' : 'development' })
+		production && terser()
 	],
 	watch: {
 		clearScreen: false
