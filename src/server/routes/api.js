@@ -23,7 +23,7 @@ const pollution_api_config = {
     'offset': 0,
     'limit': 10,
     'filters[station]': 'Sector-51, Gurugram - HSPCB',
-    // 'filters[pollutant_id]': 'PM10'
+    // 'filters[city]': 'Gurugram'
 };
 
 const sendSms = function (data) {
