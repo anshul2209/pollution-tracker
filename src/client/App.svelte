@@ -75,11 +75,12 @@
 	}
 	onMount(() => {
 		handleClick();
-		setInterval(handleClick, 10000)
+		setInterval(handleClick, 600000)
 	});
 
 
 </script>
+
 
 <section class="filter">
 	<h2>Real time Air Quality Index of <span>{address}</span></h2>
