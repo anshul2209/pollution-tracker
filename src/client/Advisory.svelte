@@ -61,6 +61,18 @@
         flex-direction: column;
         align-items: center;
     }
+    @media only screen and (max-width: 425px){
+		.details{
+            /* display: block; */
+            width: 100vw;
+		}
+		.details label{
+			font-size: 18px;
+            text-align: center;
+            line-height: 18px;
+		}
+	}
+    
 </style>
 
 <section>

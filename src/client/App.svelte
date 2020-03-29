@@ -103,7 +103,7 @@
 				<div class="label_Data">
 					<label>Main Pollutant is <span>{mainPollutant}</span></label>
 					<label>AQI is <span>{aqi}</span></label>
-					<label>{`Air Quality is ${aqiMap[expression].label}`}</label>
+					<label>Air Quality is <span>{aqiMap[expression].label}</span></label>
 				</div>
 			</div>
 			<!-- <div class="pollution_stats">
@@ -139,15 +139,19 @@
 		padding: 10px;
 		text-align: right;
 	}
+	.right{
+		padding-top: 75px;
+	}
 	main {
 		text-align: center;
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
 		display: flex;
-		align-items: center;
+		/* align-items: center; */
 		justify-content: space-evenly;
 	}
+
 	.visual_data{
 		display: flex;
 		justify-content: space-evenly;
@@ -163,23 +167,45 @@
 		flex-direction: column;
 		align-items: start;
 	}
+	.label_Data label span{
+		background: linear-gradient(to right, rgb(255, 153, 102), rgb(255, 94, 98));
+		color: white;
+		padding: 5px;
+		box-sizing: border-box;
+	}
 	label{
 		display: block;
+		font-size: 28px;
+		line-height: 48px;
 	}
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
+	h2{
+		line-height: 30px;
+	}
+	h2 span {
+		color: white;
+		background: linear-gradient(to right, rgb(255, 153, 102), rgb(255, 94, 98));
+		display: block;
+		margin: 0 auto;
+		width: max-content;
+		padding: 5px;
 	}
 	.chart{
-		display: flex;
+		/* display: flex; */
 		align-items: center;
 	}
 
 	@media (min-width: 640px) {
 		main {
 			max-width: none;
+		}
+	}
+	@media only screen and (max-width: 425px){
+		main{
+			display: block;
+		}
+		label{
+			font-size: 16px;
+			text-align: center;
 		}
 	}
 </style>

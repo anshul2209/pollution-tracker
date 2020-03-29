@@ -1,15 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const axios = require("axios");
-// axios.interceptors.request.use(request => {
-// 	console.log('Starting Request', request)
-// 	return request
-// })
-
-// axios.interceptors.response.use(response => {
-// 	console.log('Response:', response)
-// 	return response
-// })
+const cron = require("node-cron");
 
 var twilio = require('twilio');
 var accountSid = 'AC480c71bee445284fc77bb79ab79e7b05'; // Your Account SID from www.twilio.com/console
@@ -48,23 +40,48 @@ const getFilterParams = params => {
     return param;
 };
 
-router.get('/pollution', function (req, res, next) {
+const queryPollutionData = queryParams => {
+    return axios.get(pollution_url, { params: queryParams })
+        .then(response => {
+            return {
+                status: 1,
+                data: response.data
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            return {
+                status: 0,
+                data: null
+            }
+        });
+}
+
+router.get('/pollution', async function (req, res, next) {
     const queryParams = { ...pollution_api_config, ...getFilterParams(req.query) }
 
     try {
-        axios.get(pollution_url, { params: queryParams })
-            .then(response => {
-                // sendSms(response.data.records);
-
-                res.send(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        const response = await queryPollutionData(queryParams);
+        if(response && response.status) {
+            res.send(response.data);
+        }
     }
     catch (err) {
         console.error("GG", err);
     }
-})
+});
+
+// To Send the Pollution Report Every Day
+cron.schedule("59 09 * * *", async function() {
+    console.log("---------------------");
+    console.log("Sending SMS");
+    const queryParams = { ...pollution_api_config }
+    const response = await queryPollutionData(queryParams);
+
+    if(response.status) {
+        sendSms(response.data.records);
+    }
+    
+});
 
 module.exports = router;
