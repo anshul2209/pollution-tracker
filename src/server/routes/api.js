@@ -15,7 +15,7 @@ const pollution_api_config = {
     'offset': 0,
     'limit': 10,
     'filters[station]': 'Sector-51, Gurugram - HSPCB',
-    // 'filters[city]': 'Gurugram'
+    'filters[city]': 'Gurugram'
 };
 
 const sendSms = function (data) {
@@ -49,7 +49,6 @@ const queryPollutionData = queryParams => {
             }
         })
         .catch(error => {
-            console.log(error);
             return {
                 status: 0,
                 data: null

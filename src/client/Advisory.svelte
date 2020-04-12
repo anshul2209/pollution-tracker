@@ -86,21 +86,9 @@
 </section>
 
 <script>
-    import { onMount } from 'svelte';
+    import { onMount, afterUpdate } from 'svelte';
     export let expression;
     export let aqiMap;
-
-    onMount(typeWriter);
-    let i = 0;
-    let advisory = '';
-    let txt = aqiMap[expression].advisory; /* The text */
-    var speed = 50; /* The speed/duration of the effect in milliseconds */
-
-    function typeWriter() {
-        if (i < txt.length) {
-            advisory += txt.charAt(i);
-            i++;
-            setTimeout(typeWriter, speed);
-        }
-    }
+    
+    $: advisory = aqiMap[expression].advisory; /* The text */
 </script>

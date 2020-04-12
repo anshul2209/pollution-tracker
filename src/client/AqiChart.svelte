@@ -8,16 +8,22 @@
 </div>
 
 <script>
+    import { onMount } from 'svelte';
     export let aqi;
     export let color;
+    var ctx = document.getElementById("aqichart");
 
-    import { onMount } from 'svelte';
+    // onMount(() => {
+    //     renderChart(aqi);
+    // })
 
-    onMount(renderChart);
+    $: if(aqi !== '') {
+        renderChart(aqi);
+    }
+    // $: renderChart(aqi);
 
-    function renderChart() {
-        console.log('called', aqi);
-		var data = {
+    const renderChart = aqi => {
+        var data = {
             labels: [ `AQI: ${aqi}`],
             datasets: [
                 {
@@ -25,16 +31,9 @@
                     backgroundColor: [
                         color,
                         "#ddd",
-                    ],
-                    // hoverBackgroundColor: [
-                    //     "#FF6384",
-                    //     "#36A2EB",
-                    // ]
+                    ]
                 }]
         };
-
-        var ctx = document.getElementById("aqichart");
-
         // And for a doughnut chart
         var myDoughnutChart = new Chart(ctx, {
             type: 'doughnut',

@@ -1,18 +1,9 @@
 <script>
-	import axios from "axios";
-	import { onMount } from 'svelte';
 	import Pollution from './Pollution.svelte';
 	import AqiChart from './AqiChart.svelte';
 	import Advisory from './Advisory.svelte';
-
-	const ApiUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
-	console.log('Api Url is', ApiUrl);
-
-	let title = '';
-	let queryparams = {
-		city: '',
-		state: ''
-	};
+	import Filter from './components/Filter.svelte';
+	
 	let mainPollutant = '';
 	let aqi = '';
 	let last_update = '';
@@ -28,27 +19,38 @@
         6: { color: 'Maroon', label: 'Hazardous', advisory: 'Health warnings of emergency conditions. The entire population is more likely to be affected.' }
     };
 
-	const getAQI = (pollutionList) => {
-		const PM2 = pollutionList
-			.filter(obj => obj.pollutant_id === 'PM2.5')[0];
-		const PM10 = pollutionList
-			.filter(obj => obj.pollutant_id === 'PM10')[0];
-		
-		if(PM2.pollutant_avg > PM10.pollutant_avg) {
-			mainPollutant = PM2.pollutant_id;
-			aqi = PM2.pollutant_avg;
-			last_update = PM2.last_update;
-			address = `${PM2.station}, ${PM2.city}, ${PM2.state}, ${PM2.country}`
+	const getAQI = event => {
+		const pollutionList = event.detail.text;
+		if(pollutionList && pollutionList.length) {
+			const PM2 = pollutionList
+				.filter(obj => obj.pollutant_id === 'PM2.5')[0];
+			const PM10 = pollutionList
+				.filter(obj => obj.pollutant_id === 'PM10')[0];
+			
+			if(PM2.pollutant_avg > PM10.pollutant_avg) {
+				mainPollutant = PM2.pollutant_id;
+				aqi = PM2.pollutant_avg;
+				last_update = PM2.last_update;
+				address = `${PM2.station}, ${PM2.city}, ${PM2.state}, ${PM2.country}`
+			}
+			else{
+				mainPollutant = PM10.pollutant_id;
+				aqi = PM10.pollutant_avg;
+				last_update = PM10.last_update;
+				address = `${PM10.station}, ${PM10.city}, ${PM10.state}, ${PM10.country}`
+			}	
+			findAdvisory(aqi);	
 		}
 		else{
-			mainPollutant = PM10.pollutant_id;
-			aqi = PM10.pollutant_avg;
-			last_update = PM10.last_update;
-			address = `${PM10.station}, ${PM10.city}, ${PM10.state}, ${PM10.country}`
-		}	
-		findAdvisory(aqi);	
+			mainPollutant = '';
+			aqi = '';
+			last_update = '';
+			address = '';
+			expression = '';
+		}
+		
 	}
-	const findAdvisory = (aqi) => {
+	const findAdvisory = aqi => {
         if(aqi) {
             aqi = parseInt(aqi, 10);
             switch(true){
@@ -58,87 +60,36 @@
                 case aqi <=200: expression = 4; break;
                 case aqi <=300: expression = 5; break;
                 default : expression = 6;
-            }
+			}
         }
-	}
-
-	let records = [];
-	const handleClick = () => {
-		axios.get(`${ApiUrl}/api/pollution`, { params: queryparams })
-		.then(res => {
-			const result = res.data;
-			title = result.title;
-			records = result.records;
-			getAQI(records);
-		})
-		.catch(err => console.log('err is', err));
-	}
-	onMount(() => {
-		handleClick();
-		setInterval(handleClick, 600000)
-	});
-
-
+	}	
+	 
 </script>
 
-
-<section class="filter">
-	<h2>Real time Air Quality Index of <span>{address}</span></h2>
-	<!-- <div class="form">
-		<input bind:value={queryparams.city} placeholder="enter the city">
-		<input bind:value={queryparams.state} placeholder="enter the state">
-		<button on:click={handleClick}>
-			Click me
-		</button>
-	</div> -->
-</section>
-{#if mainPollutant && aqi}
-	<div class="locationinfo">
-		<label>Last Updated On: {last_update}</label>
-	</div>
-	<main class="wrapper">
-		<div class="left">
-			<div class="chart">
-				<AqiChart aqi={aqi} color={aqiMap[expression].color} />
-				<div class="label_Data">
-					<label>Main Pollutant is <span>{mainPollutant}</span></label>
-					<label>AQI is <span>{aqi}</span></label>
-					<label>Air Quality is <span>{aqiMap[expression].label}</span></label>
-				</div>
+<h2>Real time Air Quality Index of <span>{address}</span></h2>
+<div class="locationinfo">
+	<h3>Last Updated On: {last_update}</h3>
+</div>
+<Filter on:filterresults={getAQI}/>
+<main class="wrapper">
+	<div class="left">
+		<div class="chart">
+			<AqiChart aqi={aqi} color={aqiMap[expression].color} />
+			<div class="label_Data">
+				<label>Main Pollutant is <span>{mainPollutant}</span></label>
+				<label>AQI is <span>{aqi}</span></label>
+				<label>Air Quality is <span>{aqiMap[expression].label}</span></label>
 			</div>
-			<!-- <div class="pollution_stats">
-				<table>
-					<thead>
-						<th>Pollutant:</th>
-						<th>Minimum</th>
-						<th>Maximum</th>
-						<th>Average</th>
-					</thead>
-					<tbody>
-						{#each records as record}
-							<Pollution pollutionObj={record} />
-						{/each}
-					</tbody>
-				</table>
-			</div> -->
 		</div>
-		<div class="right">
-			<Advisory aqiMap={aqiMap} expression={expression}/>
-		</div>
-	</main>
-{/if}
+	</div>
+	<div class="right">
+		<Advisory aqiMap={aqiMap} expression={expression}/>
+	</div>
+</main>
 
 
 
 <style>
-	.filter{
-		text-align: center;
-	}
-	.locationinfo{
-		margin-top: 20px;
-		padding: 10px;
-		text-align: right;
-	}
 	.right{
 		padding-top: 75px;
 	}
@@ -150,17 +101,6 @@
 		display: flex;
 		/* align-items: center; */
 		justify-content: space-evenly;
-	}
-
-	.visual_data{
-		display: flex;
-		justify-content: space-evenly;
-	}
-	.polluton_details{
-		/* display: flex;
-		flex-wrap: wrap; */
-		margin-top: 50px;
-		/* justify-content: space-around; */
 	}
 	.label_Data{
 		display: flex;
@@ -177,17 +117,6 @@
 		display: block;
 		font-size: 28px;
 		line-height: 48px;
-	}
-	h2{
-		line-height: 30px;
-	}
-	h2 span {
-		color: white;
-		background: linear-gradient(to right, rgb(255, 153, 102), rgb(255, 94, 98));
-		display: block;
-		margin: 0 auto;
-		width: max-content;
-		padding: 5px;
 	}
 	.chart{
 		/* display: flex; */
